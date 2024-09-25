@@ -1,4 +1,4 @@
-Query Whatever API with some selected Text as input and display any output in the browserAction popup
+Query any API with some selected Text as input and display any output in the browserAction popup
 
 Examples: Home Automation Triggers, Translation, ... 
 

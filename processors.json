@@ -1,0 +1,10 @@
+[
+  {
+    "name": "dictionaryapi",
+    "code": "inout = atob(inout);\n\nlet tmp = await fetch(\"https://api.dictionaryapi.dev/api/v2/entries/en/\"+ inout);\n\ntmp = await tmp.json(); \n\ninout = JSON.stringify(tmp, null,2);"
+  },
+  {
+    "name": "google Translate (to En)",
+    "code": "inout=atob(inout);\nlet tmp = await fetch(   \"https://translate.googleapis.com/translate_a/single?client=gtx&dt=t&dt=bd&dj=1&sl=auto\" +     \"&tl=en&q=\" +     encodeURIComponent(inout), ); tmp = await tmp.json(); tmp = tmp.sentences.map((s) => s.trans).join(\"\"); inout = tmp;"
+  }
+]

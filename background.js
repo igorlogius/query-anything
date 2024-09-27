@@ -15,18 +15,34 @@ function cleanString(input) {
   return output;
 }
 
-/*
-function utf8_to_b64(str) {
-  return window.btoa(unescape(encodeURIComponent(str)));
+async function onInstalled(details) {
+  if (details.reason === "install") {
+    const resp = await fetch(browser.runtime.getURL("processors.json"));
+    const json = await resp.json();
+    browser.storage.local.set({ selectors: json });
+
+    browser.runtime.openOptionsPage();
+  }
 }
 
-function b64_to_utf8(str) {
-  return decodeURIComponent(escape(window.atob(str)));
+async function onStorageChange() {
+  let tmp = await getFromStorage("object", "selectors", []);
+
+  await browser.menus.removeAll();
+
+  for (let i = 0; i < tmp.length; i++) {
+    const row = tmp[i];
+    await browser.menus.create({
+      title: row.name,
+      contexts: ["selection"],
+      onclick: async (info) => {
+        onCommand(`_${i}`);
+      },
+    });
+  }
 }
-*/
 
 async function onCommand(cmd) {
-  console.debug("onCommand", cmd);
   const anr = parseInt(cmd.split("_")[1]);
 
   browser.browserAction.openPopup({});
@@ -61,56 +77,68 @@ async function onCommand(cmd) {
       code: `(async (inout) => {
 inout=decodeURIComponent(escape(atob(inout)));
 ${mycode};
-inout=btoa(unescape(encodeURIComponent(inout)));
 return inout;
 })("${b64str}");`,
     });
 
     browser.tabs.remove(evalTab.id);
 
-    if (
-      tmp &&
-      tmp.length === 1 &&
-      typeof tmp[0] === "string" &&
-      tmp[0].length > 2
-    ) {
+    if (tmp && tmp.length === 1) {
       tmp = tmp[0];
-      browser.runtime.sendMessage({ queryResult: tmp });
+
+      // assume if it is text, to display it
+      if (typeof tmp === "string") {
+        //tmp.text = btoa(unescape(encodeURIComponent(tmp.text)));
+        browser.runtime.sendMessage({ text: tmp });
+        return;
+      }
+
+      // html is an object with the html attribute
+      if (typeof tmp.text === "string") {
+        //tmp.html= btoa(unescape(encodeURIComponent(tmp.html)));
+        browser.runtime.sendMessage({ html: tmp.text});
+      }
+      // html is an object with the html attribute
+      if (typeof tmp.html === "string") {
+        //tmp.html= btoa(unescape(encodeURIComponent(tmp.html)));
+        browser.runtime.sendMessage({ html: tmp.html });
+      }
+
+      // open tabs/urls
+      if (Array.isArray(tmp.tabs)) {
+        //tmp.html= btoa(unescape(encodeURIComponent(tmp.html)));
+        browser.runtime.sendMessage({ html: tmp.html });
+        for(const t of tmp.tabs){
+            if(t.url){
+                browser.tabs.create(t);
+            }else{
+                const newtab  = await browser.tabs.create({ url: "empty.html", active: t.active});
+
+                browser.tabs.executeScript(newtab.id, {
+                    code: `document.body.innerHTML = "${t.html}"`  // todo  base64 encode an decode in script
+                });
+
+            }
+        }
+      }
     }
   }
 }
 
-async function onInstalled(details) {
-  if (details.reason === "install") {
-    const resp = await fetch(browser.runtime.getURL("processors.json"));
-    const json = await resp.json();
-    browser.storage.local.set({ selectors: json });
-
-    browser.runtime.openOptionsPage();
-  }
+/*
+function utf8_to_b64(str) {
+  return window.btoa(unescape(encodeURIComponent(str)));
 }
-browser.commands.onCommand.addListener(onCommand);
-browser.runtime.onInstalled.addListener(onInstalled);
 
-async function onStorageChange() {
-  let tmp = await getFromStorage("object", "selectors", []);
-
-  await browser.menus.removeAll();
-
-  for (let i = 0; i < tmp.length; i++) {
-    const row = tmp[i];
-    await browser.menus.create({
-      title: row.name,
-      contexts: ["selection"],
-      onclick: async (info) => {
-        onCommand(`_${i}`);
-      },
-    });
-  }
+function b64_to_utf8(str) {
+  return decodeURIComponent(escape(window.atob(str)));
 }
+*/
 
 (async () => {
   await onStorageChange();
 })();
 
 browser.storage.onChanged.addListener(onStorageChange);
+browser.commands.onCommand.addListener(onCommand);
+browser.runtime.onInstalled.addListener(onInstalled);

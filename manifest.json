@@ -1,7 +1,7 @@
 {
   "author": "igorlogius",
-  "homepage_url": "https://github.com/igorlogius/query-anything",
-  "description": "Query any API with some selected Text as input and display any output in the browserAction popup",
+  "homepage_url": "https://github.com/igorlogius/selection-processor",
+  "description": "Process selected text as input and display any output in a popup",
   "background": {
     "scripts": ["background.js"]
   },
@@ -13,43 +13,43 @@
     "512": "icon.png"
   },
   "manifest_version": 2,
-  "name": "Query Anything",
+  "name": "Selection Processor",
   "options_ui": {
     "open_in_tab": false,
     "page": "options.html"
   },
   "commands": {
     "action_0": {
-      "description": "1 query processor"
+      "description": "1 processor"
     },
     "action_1": {
-      "description": "2 query processor"
+      "description": "2 processor"
     },
     "action_2": {
-      "description": "3 query processor"
+      "description": "3 processor"
     },
     "action_3": {
-      "description": "4 query processor"
+      "description": "4 processor"
     },
     "action_4": {
-      "description": "5 query processor"
+      "description": "5 processor"
     },
     "action_5": {
-      "description": "6 query processor"
+      "description": "6 processor"
     },
     "action_6": {
-      "description": "7 query processor"
+      "description": "7 processor"
     },
     "action_7": {
-      "description": "8 query processor"
+      "description": "8 processor"
     },
     "action_8": {
-      "description": "9 query processor"
+      "description": "9 processor"
     },
     "action_9": {
-      "description": "10 query processor"
+      "description": "10 processor"
     }
   },
   "permissions": ["activeTab", "menus", "storage"],
-  "version": "1.0.2"
+  "version": "1.0.3"
 }

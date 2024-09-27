@@ -7,7 +7,11 @@ function textAreaAdjust(element) {
 
 // receive data from eval.js
 browser.runtime.onMessage.addListener((data, sender) => {
-  const txta_out = document.getElementById("output");
-  txta_out.value = decodeURIComponent(escape(window.atob(data.queryResult)));
-  textAreaAdjust(txta_out);
+  if (data.text) {
+    const txta_out = document.getElementById("output");
+    txta_out.value = data.text;
+    textAreaAdjust(txta_out);
+  } else if (data.html) {
+    document.body.innerHTML = data.html;
+  }
 });

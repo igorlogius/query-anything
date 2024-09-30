@@ -1,10 +1,50 @@
 [
   {
-    "name": "dictionaryapi",
+    "name": "Ron Swanson Quote",
+    "code": "const url = \"https://ron-swanson-quotes.herokuapp.com/v2/quotes\";\nlet tmp = await fetch(url);\ntmp = await tmp.json();\ntmp = tmp[0];\ninout = tmp;"
+  },
+  {
+    "name": "UUID",
+    "code": "let tmp = await fetch(\"https://www.uuidtools.com/api/generate/v1/count/1\");\ntmp = await tmp.text();\ninout = tmp;"
+  },
+  {
+    "name": "wttr",
+    "code": "let tmp = await fetch(\"https://wttr.in/Berlin?format=3\");\ntmp = await tmp.text();\ninout = tmp;"
+  },
+  {
+    "name": "IP (ipify)",
+    "code": "let tmp = await fetch(\"https://api.ipify.org/?format=json\");\n\ntmp = await tmp.body();\ninout = tmp;"
+  },
+  {
+    "name": "httpbin-get",
+    "code": "let tmp = await fetch(\"http://httpbin.org/get\");\n\ntmp = await tmp.text();\ninout = tmp;"
+  },
+  {
+    "name": "Libre Translate (Remote, requires apikey)",
+    "code": "inout = inout.replace(/[\\n\\r]/g, ' ');\n\nlet tmp = await fetch(\"https://libretranslate.com/translate\", {\n\tmethod: \"POST\",\n\tbody: JSON.stringify({\n\t\tq: inout,\n\t\tsource: \"auto\",\n\t\ttarget: \"en\",\n\t\tformat: \"text\",\n\t\talternatives: 3,\n\t\tapi_key: \"ADD YOUR KEY HERE\"\n\t}),\n\theaders: { \"Content-Type\": \"application/json\" }\n});\n\ntmp = await tmp.json();\ntmp = tmp.translatedText;\ninout = tmp;"
+  },
+  {
+    "name": "Libre Translate (Local)",
+    "code": "inout = inout.replace(/[\\n\\r]/g, ' ');\n\nlet tmp = await fetch(\"http://localhost:5000/translate\", {\n\tmethod: \"POST\",\n\tbody: JSON.stringify({\n\t\tq: inout,\n\t\tsource: \"auto\",\n\t\ttarget: \"en\",\n\t\tformat: \"text\",\n\t\talternatives: 3,\n\t\tapi_key: \"\"\n\t}),\n\theaders: { \"Content-Type\": \"application/json\" }\n});\n\ntmp = await tmp.json();\ntmp = tmp.translatedText;\ninout = tmp;"
+  },
+  {
+    "name": "Remove Linebreaks",
+    "code": "inout = inout.replace(/[\\n\\r]/g, ' ');"
+  },
+  {
+    "name": "in = out",
+    "code": "/**/"
+  },
+  {
+    "name": "Remove Extra Whitespaces",
+    "code": "inout = inout.replace(/[\\n\\r\\s\\t]+/g, ' ');"
+  },
+  {
+    "name": "Free Dictionary",
     "code": "let tmp = await fetch(\"https://api.dictionaryapi.dev/api/v2/entries/en/\"+ inout);\n\ntmp = await tmp.json(); \n\ninout = JSON.stringify(tmp, null,2);"
   },
   {
     "name": "google Translate (to En)",
-    "code": "let tmp = await fetch(   \"https://translate.googleapis.com/translate_a/single?client=gtx&dt=t&dt=bd&dj=1&sl=auto\" +     \"&tl=en&q=\" +     encodeURIComponent(inout), ); tmp = await tmp.json(); tmp = tmp.sentences.map((s) => s.trans).join(\"\"); inout = tmp;"
+    "code": "let tmp = await fetch(   \"https://translate.googleapis.com/translate_a/single?client=gtx&dt=t&dt=bd&dj=1&sl=auto\" +     \"&tl=en&q=\" +     encodeURIComponent(inout), ); tmp = await tmp.json(); tmp = tmp.sentences.map((s) => s.trans).join(\"\"); inout = tmp;\n/*inout = { html: \"<div>\" + tmp + \"</div>\" }*/"
   }
 ]

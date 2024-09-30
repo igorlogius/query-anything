@@ -94,11 +94,6 @@ return inout;
       }
 
       // html is an object with the html attribute
-      if (typeof tmp.text === "string") {
-        //tmp.html= btoa(unescape(encodeURIComponent(tmp.html)));
-        browser.runtime.sendMessage({ html: tmp.text});
-      }
-      // html is an object with the html attribute
       if (typeof tmp.html === "string") {
         //tmp.html= btoa(unescape(encodeURIComponent(tmp.html)));
         browser.runtime.sendMessage({ html: tmp.html });
@@ -108,17 +103,19 @@ return inout;
       if (Array.isArray(tmp.tabs)) {
         //tmp.html= btoa(unescape(encodeURIComponent(tmp.html)));
         browser.runtime.sendMessage({ html: tmp.html });
-        for(const t of tmp.tabs){
-            if(t.url){
-                browser.tabs.create(t);
-            }else{
-                const newtab  = await browser.tabs.create({ url: "empty.html", active: t.active});
+        for (const t of tmp.tabs) {
+          if (t.url) {
+            browser.tabs.create(t);
+          } else {
+            const newtab = await browser.tabs.create({
+              url: "empty.html",
+              active: t.active,
+            });
 
-                browser.tabs.executeScript(newtab.id, {
-                    code: `document.body.innerHTML = "${t.html}"`  // todo  base64 encode an decode in script
-                });
-
-            }
+            browser.tabs.executeScript(newtab.id, {
+              code: `document.body.innerHTML = "${t.html}"`, // todo  base64 encode an decode in script
+            });
+          }
         }
       }
     }
